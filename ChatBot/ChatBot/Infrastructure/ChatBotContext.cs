@@ -1,4 +1,5 @@
 ﻿using ChatBot.Migrations;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,12 +19,12 @@ namespace ChatBot.Infrastructure
 
 		public ChatBotContext() : base("name=ChatBotContext")
         {
-			//Database.Initialize(true);
 		}
 
-		public DbSet<DataAccess.Models.Message> Message { get; set; }
-		public DbSet<DataAccess.Models.User> User { get; set; }
-		public DbSet<DataAccess.Models.Attachment> Attachment { get; set; }
-		public DbSet<DataAccess.Models.Help> Help { get; set; }
+		public DbSet<Message> Message { get; set; }
+		public DbSet<User> User { get; set; }
+		public DbSet<Attachment> Attachment { get; set; }
+		public DbSet<Help> Help { get; set; }
+		public DbSet<Notification> Notification { get; set; }
 	}
 }

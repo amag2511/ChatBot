@@ -11,5 +11,7 @@ namespace DataAccess.Models
 		public string Id { get; set; }
 		public TimeSpan Time { get; set; }
 		public string Description { get; set; }
+
+		public virtual User User { get; set; }
 	}
 }

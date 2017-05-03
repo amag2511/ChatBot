@@ -8,8 +8,10 @@ namespace DataAccess.Models
 {
 	public class Message
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Tag { get; set; }
 		public string BotsMessage { get; set; }
+		public virtual User User { get; set; }
+
 	}
 }

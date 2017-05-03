@@ -8,11 +8,11 @@ namespace DataAccess.Models
 {
 	public class User
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Name { get; set; }
 
-		public virtual List<Notification> Notifications { get; set; }
-		public virtual List<Message> Messages { get; set; }
-		public virtual List<Attachment> Attachments { get; set; }
+		public virtual ICollection<Notification> Notifications { get; set; }
+		public virtual ICollection<Message> Messages { get; set; }
+		public virtual ICollection<Attachment> Attachments { get; set; }
 	}
 }
