@@ -8,8 +8,8 @@ namespace DataAccess.Models
 {
 	public class Help
 	{
-		public string Id { get; set; }
-		public string Tag { get; set; }
+		public int Id { get; set; }
+		public string Command { get; set; }
 		public string Description { get; set; }
 	}
 }

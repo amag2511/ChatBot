@@ -9,6 +9,10 @@ using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using ChatBot.Infrastructure;
 using System.Collections.Generic;
+using Microsoft.Bot.Builder.Dialogs;
+using ChatBot.Dialogs;
+using ChatBot.Repository;
+using DataAccess.Models;
 //using Eliza;
 
 namespace ChatBot
@@ -17,7 +21,7 @@ namespace ChatBot
 	public class MessagesController : ApiController
 	{
 
-        private ChatBotContext db = new ChatBotContext();
+        private ChatBotRepository<Help> db = new ChatBotRepository<Help>(new ChatBotContext());
 
 		private string missCommunication = "I dont understand your command";
 
@@ -29,49 +33,18 @@ namespace ChatBot
 		{
 			if (activity.Type == ActivityTypes.Message)
 			{
-				ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-				// calculate something for us to return
-				string rep = "I dont understand your command";
-				Activity reply;
-
-				if (activity.Text.StartsWith("@"))
-				{
-					rep = new string(activity.Text.Skip(1).ToArray());
-
-					var message = db.Message?.FirstOrDefault(x => x.Tag == rep);
-					if(message != null)
-					{
-						reply = activity.CreateReply(message.BotsMessage);
-						await connector.Conversations.ReplyToActivityAsync(reply);
-					}
-					
-					var attachments = db.Attachment.FirstOrDefault(x => x.Tag == rep);
-					if (attachments != null)
-					{
-						reply = activity.CreateReply($"{attachments.Description}\n{attachments.UriAttachment}");
-						await connector.Conversations.ReplyToActivityAsync(reply);
-					}
-					else if (message == null && attachments == null)
-					{
-						reply = activity.CreateReply(missCommunication);
-						await connector.Conversations.ReplyToActivityAsync(reply);
-					}
-				}
-				else 
-				{
-					reply = activity.CreateReply(missCommunication);
-					await connector.Conversations.ReplyToActivityAsync(reply);
-				}
+				await Conversation.SendAsync(activity, () => new RootDialog());
 			}
 			else
 			{
-				HandleSystemMessage(activity);
+				await HandleSystemMessage(activity);
 			}
 			var response = Request.CreateResponse(HttpStatusCode.OK);
 			return response;
 		}
 
-		private Activity HandleSystemMessage(Activity message)
+
+		private async Task<Activity> HandleSystemMessage(Activity message)
 		{
 			if (message.Type == ActivityTypes.DeleteUserData)
 			{
@@ -80,6 +53,7 @@ namespace ChatBot
 			}
 			else if (message.Type == ActivityTypes.ConversationUpdate)
 			{
+				//await Conversation.SendAsync(message, () => new WelcomeDialog());
 				// Handle conversation state changes, like members being added and removed
 				// Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
 				// Not available in all channels
@@ -88,6 +62,7 @@ namespace ChatBot
 			{
 				// Handle add/remove from contact lists
 				// Activity.From + Activity.Action represent what happened
+				//await Conversation.SendAsync(message, () => new WelcomeDialog());
 			}
 			else if (message.Type == ActivityTypes.Typing)
 			{
@@ -108,5 +83,42 @@ namespace ChatBot
 			}
 			base.Dispose(disposing);
 		}
+
+		//		ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+		//		// calculate something for us to return
+		//		string rep = "I dont understand your command";
+		//		/////////////
+		//		Activity reply = activity.CreateReply();
+
+		//		reply.Attachments = reply.Attachments ?? new List<Attachment>();
+
+		//				reply.Attachments.Add(activity.Attachments.FirstOrDefault());
+
+		//				await connector.Conversations.ReplyToActivityAsync(reply);
+		//				//////////////
+		//				return Request.CreateResponse(HttpStatusCode.OK);
+
+		//				if (activity.Text.StartsWith("@"))
+		//				{
+		//					rep = new string(activity.Text.Skip(1).ToArray());
+
+		//					var message = db.Message?.FirstOrDefault(x => x.Tag == rep);
+		//					if(message != null)
+		//					{
+		//						reply = activity.CreateReply(message.BotsMessage);
+		//						await connector.Conversations.ReplyToActivityAsync(reply);
+		//	}
+
+		//	var attachments = db.Attachment.FirstOrDefault(x => x.Tag == rep);
+		//					if (attachments != null)
+		//					{
+		//						reply = activity.CreateReply($"{attachments.Description}\n{attachments.UriAttachment}");
+		//						await connector.Conversations.ReplyToActivityAsync(reply);
+		//}
+		//					else if (message == null && attachments == null)
+		//					{
+		//						reply = activity.CreateReply(missCommunication);
+		//						await connector.Conversations.ReplyToActivityAsync(reply);
+		//					}
 	}
 }

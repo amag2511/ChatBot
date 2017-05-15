@@ -8,7 +8,7 @@ namespace DataAccess.Models
 {
 	public class Attachment
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public string Tag { get; set; }
 		public string UriAttachment { get; set; }
 		public string Description { get; set; }

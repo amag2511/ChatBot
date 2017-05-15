@@ -128,6 +128,14 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dialogs\AttachmentsDialog.cs" />
+    <Compile Include="Dialogs\HelpDialog.cs" />
+    <Compile Include="Dialogs\Hotel.cs" />
+    <Compile Include="Dialogs\HotelsQuery.cs" />
+    <Compile Include="Dialogs\MessageDialog.cs" />
+    <Compile Include="Dialogs\NotificationDialog.cs" />
+    <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\WelcomeDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -136,11 +144,20 @@
     <Compile Include="Migrations\201705011940014_Initialize.Designer.cs">
       <DependentUpon>201705011940014_Initialize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705111423390_UpgradeDb.cs" />
+    <Compile Include="Migrations\201705111423390_UpgradeDb.Designer.cs">
+      <DependentUpon>201705111423390_UpgradeDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\ChatBotContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ChatBotRepository.cs" />
     <Compile Include="Repository\IChatBotRepository.cs" />
+    <Compile Include="Resources\ChatBotResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChatBotResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -168,6 +185,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201705011940014_Initialize.resx">
       <DependentUpon>201705011940014_Initialize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705111423390_UpgradeDb.resx">
+      <DependentUpon>201705111423390_UpgradeDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ChatBotResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChatBotResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

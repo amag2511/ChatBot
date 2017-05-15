@@ -8,7 +8,7 @@ namespace DataAccess.Models
 {
 	public class Notification
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public TimeSpan Time { get; set; }
 		public string Description { get; set; }
 
