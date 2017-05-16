@@ -11,6 +11,7 @@ namespace DataAccess.Models
 		public int Id { get; set; }
 		public string Tag { get; set; }
 		public string BotsMessage { get; set; }
+		public int? UserId { get; set; }
 		public virtual User User { get; set; }
 
 	}

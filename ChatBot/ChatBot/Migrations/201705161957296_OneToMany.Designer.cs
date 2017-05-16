@@ -7,13 +7,13 @@ namespace ChatBot.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class UpgradeDb : IMigrationMetadata
+    public sealed partial class OneToMany : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UpgradeDb));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(OneToMany));
         
         string IMigrationMetadata.Id
         {
-            get { return "201705111423390_UpgradeDb"; }
+            get { return "201705161957296_OneToMany"; }
         }
         
         string IMigrationMetadata.Source

@@ -13,9 +13,11 @@ namespace ChatBot.Dialogs
 	public class RootDialog : IDialog<object>
 	{
 
-		private const string FlightsOption = "Flights";
+		private const string AttachmentsOption = "Прикрепления";
 
-		private const string HotelsOption = "Hotels";
+		private const string NotificationsOption = "Уведомления";
+
+		private const string SearchOption = "Поиск";
 
 		public async Task StartAsync(IDialogContext context)
 		{
@@ -38,7 +40,7 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { FlightsOption, HotelsOption }, "Are you looking for a flight or a hotel?", "Not a valid option", 3);
+			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?");
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -49,13 +51,16 @@ namespace ChatBot.Dialogs
 
 				switch (optionSelected)
 				{
-					case FlightsOption:
+					case NotificationsOption:
 						context.Call(new MessageDialog(), this.ResumeAfterOptionDialog);
 						break;
-
-					case HotelsOption:
+					case AttachmentsOption:
 						context.Call(new AttachmentsDialog(), this.ResumeAfterOptionDialog);
 						break;
+					case SearchOption:
+						context.Call(new SearchDialog(), this.ResumeAfterOptionDialog);
+						break;
+
 				}
 			}
 			catch (TooManyAttemptsException ex)

@@ -56,6 +56,7 @@ namespace ChatBot.Dialogs
 			}
 
 			await context.PostAsync(helpMessage);
+			context.Done(1);
 		}
 	}
 }

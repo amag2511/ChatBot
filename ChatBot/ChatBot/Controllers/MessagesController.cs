@@ -21,9 +21,7 @@ namespace ChatBot
 	public class MessagesController : ApiController
 	{
 
-        private ChatBotRepository<Help> db = new ChatBotRepository<Help>(new ChatBotContext());
-
-		private string missCommunication = "I dont understand your command";
+		private ChatBotRepository<Help> db = new ChatBotRepository<Help>(new ChatBotContext());
 
 		/// <summary>
 		/// POST: api/Messages

@@ -61,6 +61,16 @@ namespace ChatBot.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Существующие файлы в репозитории:
+        ///{0}. .
+        /// </summary>
+        internal static string DELETE_ATTACHMENT {
+            get {
+                return ResourceManager.GetString("DELETE_ATTACHMENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Я поддерживаю следующие команды:
         ///{0}
         ///Для того, чтобы узнать больше по каждой из них, напиши: help [command]..
