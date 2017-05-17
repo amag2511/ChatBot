@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Models
 {
+	[Serializable]
 	public class Notification
 	{
 		public int Id { get; set; }

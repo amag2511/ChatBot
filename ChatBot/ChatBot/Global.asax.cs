@@ -13,7 +13,6 @@ namespace ChatBot
 	{
 		protected void Application_Start()
 		{
-			Database.SetInitializer(new ChatBotContextInitializer());
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 		}
 	}

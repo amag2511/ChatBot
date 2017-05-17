@@ -117,23 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DELETE_ATTACHMENT" xml:space="preserve">
-    <value>Существующие файлы в репозитории:
-{0}. </value>
+  <data name="Target" xml:space="preserve">
+    <value>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</value>
   </data>
-  <data name="HELP_DESCRIPTION" xml:space="preserve">
-    <value>Я поддерживаю следующие команды:
-{0}
-Для того, чтобы узнать больше по каждой из них, напиши: help [command].</value>
-  </data>
-  <data name="HELP_DIDNT_FIND_COMMAND" xml:space="preserve">
-    <value>Простите, но такой комманды нет в списке. Введите 'help' для справки.</value>
-  </data>
-  <data name="HELP_MESSAGE" xml:space="preserve">
-    <value>Для дополнительной информации введите предложение, содержащее help.</value>
-  </data>
-  <data name="WELCOME_MESSAGE" xml:space="preserve">
-    <value>Привет новые участники беседы! Вы стали счастливым пользователем меня:) 
-Для дополнительной информации введите help.</value>
+  <data name="DefaultSchema" xml:space="preserve">
+    <value>dbo</value>
   </data>
 </root>

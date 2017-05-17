@@ -19,40 +19,33 @@ namespace ChatBot.Dialogs
 		private const string ADD_ATTACHMENT = "Добавить";
 		private const string DELETE_ATTACHMENT = "Удалить";
 
-		private readonly ChatBotRepository<User> _repository;
-		private readonly IEnumerable<DataAccess.Models.Attachment> _attachments;
+		private User _user;
 
-		//public AttachmentsDialog()
-		//{
-		//	using (var rep = new ChatBotRepository<User>(new ChatBotContext()))
-		//	{
-		//		_attachments = rep.FindById(1).Attachments.ToList();
-		//	}
+		public AttachmentsDialog(User user)
+		{
+			this._user = user;
+		}
 
-		//}
+		public AttachmentsDialog()
+		{
+		}
 
 		public async Task StartAsync(IDialogContext context)
 		{
 			await context.PostAsync("Nice");
 
-			context.Wait(MessageReceivedAsync);
-			//ShowOptions(context);
+			ShowOptions(context);
 		}
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { ADD_ATTACHMENT, DELETE_ATTACHMENT }, "Какое действие желаете выполнить?", "Attachments crashed promt", 3);
-		}
-
-		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-		{
-			ShowOptions(context);
+			PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { ADD_ATTACHMENT, DELETE_ATTACHMENT }, "Какое действие желаете выполнить?", "Attachments crashed promt", 3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
 		{
 			try
-			{
+			{ 
 				string optionSelected = await result;
 
 				switch (optionSelected)
@@ -62,7 +55,7 @@ namespace ChatBot.Dialogs
 						context.Call(AddAttachmentFormDialog, this.ResumeAfterAddFormDialog);
 						break;
 					case DELETE_ATTACHMENT:
-						var allAttachments = string.Format(ChatBotResources.DELETE_ATTACHMENT, string.Join(", ", _attachments?.Select(x => x.Name)));
+						var allAttachments = string.Format(ChatBotResources.DELETE_ATTACHMENT, string.Join(", ", _user.MediaElements.Select(x => x.Name)));
 						await context.PostAsync(allAttachments);
 						var DeleteAttachmentFormDialog = FormDialog.FromForm(this.BuildDeleteAttachmentForm, FormOptions.PromptInStart);
 						context.Call(DeleteAttachmentFormDialog, this.ResumeAfterDeleteFormDialog);
@@ -72,8 +65,6 @@ namespace ChatBot.Dialogs
 			catch (TooManyAttemptsException ex)
 			{
 				await context.PostAsync($"Упс, слишком много попыток. Однако ты можешь попытаться попробовать снова!");
-
-				context.Wait(this.MessageReceivedAsync);
 			}
 		}
 
@@ -82,7 +73,7 @@ namespace ChatBot.Dialogs
 		{
 			OnCompletionAsyncDelegate<AddAttachmentForm> processHotelsSearch = async (context, state) =>
 			{
-				await context.PostAsync($"Хорошо. Файл с тегом {state.Tag} будет загружен на сервер...");
+				await context.PostAsync($"Хорошо. Теперь загрузите файл");
 			};
 
 			return new FormBuilder<AddAttachmentForm>()
@@ -108,7 +99,7 @@ namespace ChatBot.Dialogs
 		{
 			try
 			{
-				
+				context.Call(new ReceiveAttachmentDialog(_user, await result), this.ResumeAfterRecieveAttachmentDialog);
 			}
 			catch (FormCanceledException ex)
 			{
@@ -116,7 +107,7 @@ namespace ChatBot.Dialogs
 
 				if (ex.InnerException == null)
 				{
-					reply = "You have canceled the operation. Quitting from the HotelsDialog";
+					reply = "You have canceled the operation. Quitting from the AttachmentDialog";
 				}
 				else
 				{
@@ -124,10 +115,6 @@ namespace ChatBot.Dialogs
 				}
 
 				await context.PostAsync(reply);
-			}
-			finally
-			{
-				context.Done<object>(null);
 			}
 		}
 
@@ -156,6 +143,10 @@ namespace ChatBot.Dialogs
 			{
 				context.Done<object>(null);
 			}
+		}
+		private async Task ResumeAfterRecieveAttachmentDialog(IDialogContext context, IAwaitable<object> result)
+		{
+			context.Done<object>(null);
 		}
 	}
 }

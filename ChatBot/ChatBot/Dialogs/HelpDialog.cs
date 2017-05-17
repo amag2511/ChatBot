@@ -21,7 +21,7 @@ namespace ChatBot.Dialogs
 
 		public HelpDialog()
 		{
-			_repository = new ChatBotRepository<Help>(new ChatBotContext());
+			_repository = new ChatBotRepository<Help>();
 			_helpCommands = _repository.GetCollection;
 		}
 		public async Task StartAsync(IDialogContext context)

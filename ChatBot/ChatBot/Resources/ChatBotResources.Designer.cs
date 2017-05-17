@@ -100,7 +100,7 @@ namespace ChatBot.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Привет! Вы стали счастливым пользователем меня:) 
+        ///   Looks up a localized string similar to Привет новые участники беседы! Вы стали счастливым пользователем меня:) 
         ///Для дополнительной информации введите help..
         /// </summary>
         internal static string WELCOME_MESSAGE {

@@ -13,6 +13,8 @@ using Microsoft.Bot.Builder.Dialogs;
 using ChatBot.Dialogs;
 using ChatBot.Repository;
 using DataAccess.Models;
+using ChatBot.Resources;
+using System.Collections.ObjectModel;
 //using Eliza;
 
 namespace ChatBot
@@ -20,8 +22,7 @@ namespace ChatBot
 	[BotAuthentication]
 	public class MessagesController : ApiController
 	{
-
-		private ChatBotRepository<Help> db = new ChatBotRepository<Help>(new ChatBotContext());
+		private ChatBotRepository<User> _repository = new ChatBotRepository<User>();
 
 		/// <summary>
 		/// POST: api/Messages
@@ -49,15 +50,37 @@ namespace ChatBot
 				// Implement user deletion here
 				// If we handle user deletion, return a real message
 			}
+
 			else if (message.Type == ActivityTypes.ConversationUpdate)
 			{
-				//await Conversation.SendAsync(message, () => new WelcomeDialog());
-				// Handle conversation state changes, like members being added and removed
-				// Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
-				// Not available in all channels
+				if(message.MembersAdded != null && message.MembersAdded.Any() && !(message.MembersAdded.Any(x => x.Name == "Bot") && message.MembersAdded.Count == 1))
+				{
+					await GenerateWelcomeMessage(message);
+
+					List <User> members = new List<User>();
+					foreach(var user in message.MembersAdded)
+					{
+						_repository.Create(new User
+						{
+							ConversationId = message.Conversation.Id,
+							Name = user.Name
+						});
+					}
+				}
+
+				if (message.MembersRemoved != null && message.MembersRemoved.Any())
+				{
+					var members = _repository.GetCollection.Where(x => x.ConversationId == message.Conversation.Id)
+						.Where(x => message.MembersRemoved.FirstOrDefault(y => y.Name == x.Name) != null);
+					foreach(var user in members)
+					{
+						_repository.Remove(user);
+					}
+				}
 			}
 			else if (message.Type == ActivityTypes.ContactRelationUpdate)
 			{
+
 				// Handle add/remove from contact lists
 				// Activity.From + Activity.Action represent what happened
 				//await Conversation.SendAsync(message, () => new WelcomeDialog());
@@ -73,50 +96,13 @@ namespace ChatBot
 			return null;
 		}
 
-		protected override void Dispose(bool disposing)
+		private async Task GenerateWelcomeMessage(Activity message)
 		{
-			if (disposing)
-			{
-				db.Dispose();
-			}
-			base.Dispose(disposing);
+			var connector = new ConnectorClient(new Uri(message.ServiceUrl));
+
+			var reply = message.CreateReply(ChatBotResources.WELCOME_MESSAGE);
+
+			await connector.Conversations.ReplyToActivityAsync(reply);
 		}
-
-		//		ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-		//		// calculate something for us to return
-		//		string rep = "I dont understand your command";
-		//		/////////////
-		//		Activity reply = activity.CreateReply();
-
-		//		reply.Attachments = reply.Attachments ?? new List<Attachment>();
-
-		//				reply.Attachments.Add(activity.Attachments.FirstOrDefault());
-
-		//				await connector.Conversations.ReplyToActivityAsync(reply);
-		//				//////////////
-		//				return Request.CreateResponse(HttpStatusCode.OK);
-
-		//				if (activity.Text.StartsWith("@"))
-		//				{
-		//					rep = new string(activity.Text.Skip(1).ToArray());
-
-		//					var message = db.Message?.FirstOrDefault(x => x.Tag == rep);
-		//					if(message != null)
-		//					{
-		//						reply = activity.CreateReply(message.BotsMessage);
-		//						await connector.Conversations.ReplyToActivityAsync(reply);
-		//	}
-
-		//	var attachments = db.Attachment.FirstOrDefault(x => x.Tag == rep);
-		//					if (attachments != null)
-		//					{
-		//						reply = activity.CreateReply($"{attachments.Description}\n{attachments.UriAttachment}");
-		//						await connector.Conversations.ReplyToActivityAsync(reply);
-		//}
-		//					else if (message == null && attachments == null)
-		//					{
-		//						reply = activity.CreateReply(missCommunication);
-		//						await connector.Conversations.ReplyToActivityAsync(reply);
-		//					}
 	}
 }

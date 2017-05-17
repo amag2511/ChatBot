@@ -6,6 +6,8 @@ using System.Web;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
 using System.Threading;
+using ChatBot.Repository;
+using DataAccess.Models;
 
 namespace ChatBot.Dialogs
 {
@@ -14,19 +16,26 @@ namespace ChatBot.Dialogs
 	{
 
 		private const string AttachmentsOption = "Прикрепления";
-
 		private const string NotificationsOption = "Уведомления";
-
 		private const string SearchOption = "Поиск";
 
+		private User _user;
+		public RootDialog()
+		{
+		}
 		public async Task StartAsync(IDialogContext context)
 		{
-			context.Wait(MessageReceivedAsync);
+			context.Wait(this.MessageReceivedAsync);
 		}
 
 		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
 		{
 			var message = await result;
+
+			using (var repository = new ChatBotRepository<User>())
+			{
+				_user = repository.GetSender(message);
+			}
 
 			if (message.Text.ToLower().Contains("help"))
 			{
@@ -40,7 +49,7 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?");
+			PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?", "Not a valid option", 3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -52,10 +61,10 @@ namespace ChatBot.Dialogs
 				switch (optionSelected)
 				{
 					case NotificationsOption:
-						context.Call(new MessageDialog(), this.ResumeAfterOptionDialog);
+						context.Call(new NotificationDialog(), this.ResumeAfterOptionDialog);
 						break;
 					case AttachmentsOption:
-						context.Call(new AttachmentsDialog(), this.ResumeAfterOptionDialog);
+						context.Call(new AttachmentsDialog(_user), this.ResumeAfterOptionDialog);
 						break;
 					case SearchOption:
 						context.Call(new SearchDialog(), this.ResumeAfterOptionDialog);

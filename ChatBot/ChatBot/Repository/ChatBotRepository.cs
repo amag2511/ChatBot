@@ -1,5 +1,6 @@
 ﻿using ChatBot.Infrastructure;
 using DataAccess.Models;
+using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,6 +11,7 @@ using System.Web;
 
 namespace ChatBot.Repository
 {
+	[Serializable]
 	public class ChatBotRepository<T> : IDisposable, IChatBotRepository<T>
 		where T : class
 	{
@@ -28,9 +30,9 @@ namespace ChatBot.Repository
 			}
 		}
 
-		public ChatBotRepository(ChatBotContext chatBotContext)
+		public ChatBotRepository()
 		{
-			_chatBotContext = chatBotContext;
+			_chatBotContext = new ChatBotContext();
 			_dbSet = _chatBotContext.Set<T>();
 		}
 
@@ -72,6 +74,20 @@ namespace ChatBot.Repository
 			IQueryable<T> query = _dbSet.AsNoTracking();
 			return includeProperties
 				.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+		}
+
+		public User GetSender(IMessageActivity activity)
+		{
+			var currentObject = (this as ChatBotRepository<User>);
+
+			if (currentObject == null)
+			{
+				return null;
+			}
+
+			return (this as ChatBotRepository<User>).GetWithInclude(x => x.MediaElements, x => x.Notifications)
+					.FirstOrDefault(x => x.ConversationId == activity.Conversation.Id && x.Name == activity.From.Name);
+
 		}
 
 		public void Save()

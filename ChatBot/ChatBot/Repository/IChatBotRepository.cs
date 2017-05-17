@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccess.Models;
+using Microsoft.Bot.Connector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,6 +18,8 @@ namespace ChatBot.Repository
 		IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties);
 		IEnumerable<T> GetWithInclude(Func<T, bool> predicate,
 			params Expression<Func<T, object>>[] includeProperties);
+
+		User GetSender(IMessageActivity activity);
 		void Save();
 	}
 }

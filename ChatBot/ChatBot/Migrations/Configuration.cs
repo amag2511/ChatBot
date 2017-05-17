@@ -21,10 +21,6 @@ namespace ChatBot.Migrations
 					new User() { Id = 2, Name = "Charles Dickens" },
 					new User() { Id = 3, Name = "Miguel de Cervantes" }
 					);
-			context.Message.AddOrUpdate(x => x.Id,
-					new Message() { Id = 1, Tag = "SprintPlans", BotsMessage = "продолжаем фиксать баги, которые мы должны закрыть в этом спринте" },
-					new Message() { Id = 2, Tag = "PlansToday", BotsMessage = "Ќачало рабочего дн€ начинаетс€ в 9 00 и заканчиваетс€ в 18 00. «апланированное ежедневное совещание с командой. ¬стреча с заказчиком" }
-					);
 			context.Help.AddOrUpdate(x => x.Id,
 					new Help() { Id = 1, Command = "Add-notification", Description = "ƒл€ того, чтобы добавить уведомление, необходимо написать: Add-notification [current date] [description]" },
 					new Help() { Id = 1, Command = "Add-attachment", Description = "ƒл€ того, чтобы добавить прикрепление, необходимо написать: Add-attachment [media element]" },

@@ -134,13 +134,13 @@
     <Compile Include="Dialogs\MessageDialog.cs" />
     <Compile Include="Dialogs\NotificationDialog.cs" />
     <Compile Include="Dialogs\Forms\DeleteAttachmentForm.cs" />
+    <Compile Include="Dialogs\ReceiveAttachmentDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\SearchDialog.cs" />
     <Compile Include="Dialogs\WelcomeDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\ChatBotContextInitializer.cs" />
     <Compile Include="Migrations\201705161922543_init.cs" />
     <Compile Include="Migrations\201705161922543_init.Designer.cs">
       <DependentUpon>201705161922543_init.cs</DependentUpon>
@@ -148,6 +148,18 @@
     <Compile Include="Migrations\201705161957296_OneToMany.cs" />
     <Compile Include="Migrations\201705161957296_OneToMany.Designer.cs">
       <DependentUpon>201705161957296_OneToMany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705171856504_UpdateAttachments.cs" />
+    <Compile Include="Migrations\201705171856504_UpdateAttachments.Designer.cs">
+      <DependentUpon>201705171856504_UpdateAttachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705171941020_RemoveMessages.cs" />
+    <Compile Include="Migrations\201705171941020_RemoveMessages.Designer.cs">
+      <DependentUpon>201705171941020_RemoveMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705172021020_UpMediaEl.cs" />
+    <Compile Include="Migrations\201705172021020_UpMediaEl.Designer.cs">
+      <DependentUpon>201705172021020_UpMediaEl.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\ChatBotContext.cs" />
@@ -189,6 +201,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705161957296_OneToMany.resx">
       <DependentUpon>201705161957296_OneToMany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705171856504_UpdateAttachments.resx">
+      <DependentUpon>201705171856504_UpdateAttachments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705171941020_RemoveMessages.resx">
+      <DependentUpon>201705171941020_RemoveMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705172021020_UpMediaEl.resx">
+      <DependentUpon>201705172021020_UpMediaEl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ChatBotResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
