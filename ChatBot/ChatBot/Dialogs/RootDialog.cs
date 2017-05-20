@@ -67,7 +67,7 @@ namespace ChatBot.Dialogs
 						context.Call(new AttachmentsDialog(_user), this.ResumeAfterOptionDialog);
 						break;
 					case SearchOption:
-						context.Call(new SearchDialog(), this.ResumeAfterOptionDialog);
+						context.Call(new SearchDialog(_user), this.ResumeAfterOptionDialog);
 						break;
 
 				}

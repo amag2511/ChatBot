@@ -51,6 +51,11 @@ namespace ChatBot.Dialogs
 			{
 				context.Fail(new ArgumentException("Что-то пошло не так, убедитесь, что вы отправили именно медиа элемент"));
 			}
+
+			finally
+			{
+				context.Done<object>(null);
+			}
 		}
 
 		private async Task SaveAttachmentToRepository(IMessageActivity message)
@@ -59,7 +64,6 @@ namespace ChatBot.Dialogs
 
 			using (HttpClient httpClient = new HttpClient())
 			{
-				// Skype & MS Teams attachment URLs are secured by a JwtToken, so we need to pass the token from our bot.
 				if ((message.ChannelId.Equals("skype", StringComparison.InvariantCultureIgnoreCase) || message.ChannelId.Equals("msteams", StringComparison.InvariantCultureIgnoreCase))
 					&& new Uri(attachment.ContentUrl).Host.EndsWith("skype.com"))
 				{
@@ -80,12 +84,7 @@ namespace ChatBot.Dialogs
 					Name = attachment.Name,
 					Description = _state.Description
 				};
-				//using (var rep = new ChatBotRepository<User>())
-				//{
-				//	_user.MediaElements.Add(mediaElement);
 
-				//	rep.Update(_user);
-				//}
 				using (var rep = new ChatBotRepository<MediaElement>())
 				{
 					mediaElement.UserId = _user.Id;
