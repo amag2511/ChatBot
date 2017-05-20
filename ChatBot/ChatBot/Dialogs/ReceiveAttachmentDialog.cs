@@ -51,11 +51,6 @@ namespace ChatBot.Dialogs
 			{
 				context.Fail(new ArgumentException("Что-то пошло не так, убедитесь, что вы отправили именно медиа элемент"));
 			}
-
-			finally
-			{
-				context.Done<object>(null);
-			}
 		}
 
 		private async Task SaveAttachmentToRepository(IMessageActivity message)

@@ -99,7 +99,7 @@ namespace ChatBot.Dialogs
 		{
 			try
 			{
-				context.Call(new ReceiveAttachmentDialog(_user, await result), this.ResumeAfterRecieveAttachmentDialog);
+				context.Call(new ReceiveAttachmentDialog(_user, await result), null);
 			}
 			catch (FormCanceledException ex)
 			{
@@ -122,7 +122,7 @@ namespace ChatBot.Dialogs
 		{
 			try
 			{
-
+				await context.PostAsync(RemoveMediaElementFromDatabase((await result).Name));
 			}
 			catch (FormCanceledException ex)
 			{
@@ -144,9 +144,21 @@ namespace ChatBot.Dialogs
 				context.Done<object>(null);
 			}
 		}
-		private async Task ResumeAfterRecieveAttachmentDialog(IDialogContext context, IAwaitable<object> result)
+
+		private string RemoveMediaElementFromDatabase(string name)
 		{
-			context.Done<object>(null);
+			using (var repository = new ChatBotRepository<MediaElement>())
+			{
+				var mediaElementForDeleting = _user.MediaElements.FirstOrDefault(x => x.Name == name);
+				if (mediaElementForDeleting == null)
+				{
+					return "Упс, но такого файла нет в базе";
+				}
+
+				repository.Remove(mediaElementForDeleting);
+
+				return "Удаление прошо успешно, поздравляю(party)";
+			}
 		}
 	}
 }

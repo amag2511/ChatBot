@@ -14,16 +14,9 @@ namespace ChatBot.Dialogs
 	[Serializable]
 	public class HelpDialog : IDialog<int>
 	{
-		private ChatBotRepository<Help> _repository;
 		private const string HELP_COMMAND = "Help";
 
 		private IEnumerable<Help> _helpCommands;
-
-		public HelpDialog()
-		{
-			_repository = new ChatBotRepository<Help>();
-			_helpCommands = _repository.GetCollection;
-		}
 		public async Task StartAsync(IDialogContext context)
 		{
 			context.Wait(this.MessageReceivedAsync);
@@ -31,6 +24,8 @@ namespace ChatBot.Dialogs
 
 		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
 		{
+			UpdateHelpCommandsList();
+
 			var message = await result;
 			string helpMessage;
 
@@ -57,6 +52,17 @@ namespace ChatBot.Dialogs
 
 			await context.PostAsync(helpMessage);
 			context.Done(1);
+		}
+
+		private void UpdateHelpCommandsList()
+		{
+			if (_helpCommands == null)
+			{
+				using (var repository = new ChatBotRepository<Help>())
+				{
+					_helpCommands = repository.GetCollection;
+				}
+			}
 		}
 	}
 }
