@@ -22,8 +22,6 @@ namespace ChatBot
 	[BotAuthentication]
 	public class MessagesController : ApiController
 	{
-		private ChatBotRepository<User> _repository = new ChatBotRepository<User>();
-
 		/// <summary>
 		/// POST: api/Messages
 		/// Receive a message from a user and reply to it
@@ -53,28 +51,36 @@ namespace ChatBot
 
 			else if (message.Type == ActivityTypes.ConversationUpdate)
 			{
-				if(message.MembersAdded != null && message.MembersAdded.Any() && !(message.MembersAdded.Any(x => x.Name == "Bot") && message.MembersAdded.Count == 1))
+				using (var repository = new ChatBotRepository<User>())
 				{
-					await GenerateWelcomeMessage(message);
-
-					List <User> members = new List<User>();
-					foreach(var user in message.MembersAdded)
+					if (message.MembersAdded != null && message.MembersAdded.Any() && !(message.MembersAdded.Any(x => x.Name == "Bot") && message.MembersAdded.Count == 1))
 					{
-						_repository.Create(new User
+						await GenerateWelcomeMessage(message);
+
+						List<User> members = new List<User>();
+						foreach (var user in message.MembersAdded)
 						{
-							ConversationId = message.Conversation.Id,
-							Name = user.Name
-						});
+							repository.Create(new User
+							{
+								ToId = user.Id,
+								ToName = user.Name,
+								FromId = message.Recipient.Id,
+								FromName = message.Recipient.Name,
+								ServiceUrl = message.ServiceUrl,
+								ChannelId = message.ChannelId,
+								ConversationId = message.Conversation.Id,
+							});
+						}
 					}
-				}
 
-				if (message.MembersRemoved != null && message.MembersRemoved.Any())
-				{
-					var members = _repository.GetCollection.Where(x => x.ConversationId == message.Conversation.Id)
-						.Where(x => message.MembersRemoved.FirstOrDefault(y => y.Name == x.Name) != null);
-					foreach(var user in members)
+					if (message.MembersRemoved != null && message.MembersRemoved.Any())
 					{
-						_repository.Remove(user);
+						var members = repository.GetCollection.Where(x => x.ConversationId == message.Conversation.Id)
+							.Where(x => message.MembersRemoved.FirstOrDefault(y => y.Name == x.ToName) != null);
+						foreach (var user in members)
+						{
+							repository.Remove(user);
+						}
 					}
 				}
 			}

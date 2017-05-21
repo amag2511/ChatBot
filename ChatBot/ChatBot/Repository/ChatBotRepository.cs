@@ -86,7 +86,7 @@ namespace ChatBot.Repository
 			}
 
 			return (this as ChatBotRepository<User>).GetWithInclude(x => x.MediaElements, x => x.Notifications)
-					.FirstOrDefault(x => x.ConversationId == activity.Conversation.Id && x.Name == activity.From.Name);
+					.FirstOrDefault(x => x.ConversationId == activity.Conversation.Id && x.ToName == activity.From.Name);
 
 		}
 

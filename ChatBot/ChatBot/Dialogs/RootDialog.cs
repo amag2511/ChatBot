@@ -8,6 +8,7 @@ using Microsoft.Bot.Connector;
 using System.Threading;
 using ChatBot.Repository;
 using DataAccess.Models;
+using ChatBot.Services;
 
 namespace ChatBot.Dialogs
 {
@@ -20,12 +21,15 @@ namespace ChatBot.Dialogs
 		private const string SearchOption = "Поиск";
 
 		private User _user;
+		private NotifyService _notifyService;
+
 		public RootDialog()
 		{
+			_notifyService = new NotifyService();
 		}
 		public async Task StartAsync(IDialogContext context)
 		{
-			context.Wait(this.MessageReceivedAsync);
+			context.Wait(MessageReceivedAsync);
 		}
 
 		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -39,7 +43,7 @@ namespace ChatBot.Dialogs
 
 			if (message.Text.ToLower().Contains("help"))
 			{
-				await context.Forward(new HelpDialog(), this.ResumeAfterSupportDialog, message, CancellationToken.None);
+				await context.Forward(new HelpDialog(), ResumeAfterSupportDialog, message, CancellationToken.None);
 			}
 			else
 			{
@@ -49,7 +53,7 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?", "Not a valid option", 3);
+			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?", "Not a valid option", 3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -61,13 +65,13 @@ namespace ChatBot.Dialogs
 				switch (optionSelected)
 				{
 					case NotificationsOption:
-						context.Call(new NotificationDialog(), this.ResumeAfterOptionDialog);
+						context.Call(new NotificationDialog(_user), ResumeAfterOptionDialog);
 						break;
 					case AttachmentsOption:
-						context.Call(new AttachmentsDialog(_user), this.ResumeAfterOptionDialog);
+						context.Call(new AttachmentsDialog(_user), ResumeAfterOptionDialog);
 						break;
 					case SearchOption:
-						context.Call(new SearchDialog(_user), this.ResumeAfterOptionDialog);
+						context.Call(new SearchDialog(_user), ResumeAfterOptionDialog);
 						break;
 
 				}
@@ -76,16 +80,13 @@ namespace ChatBot.Dialogs
 			{
 				await context.PostAsync($"Ooops! Too many attemps :(. But don't worry, I'm handling that exception and you can try again!");
 
-				context.Wait(this.MessageReceivedAsync);
+				context.Wait(MessageReceivedAsync);
 			}
 		}
 
 		private async Task ResumeAfterSupportDialog(IDialogContext context, IAwaitable<int> result)
 		{
-			var ticketNumber = await result;
-
-			await context.PostAsync($"Thanks for contacting our support team. Your ticket number is {ticketNumber}.");
-			context.Wait(this.MessageReceivedAsync);
+			context.Wait(MessageReceivedAsync);
 		}
 
 		private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
@@ -100,7 +101,7 @@ namespace ChatBot.Dialogs
 			}
 			finally
 			{
-				context.Wait(this.MessageReceivedAsync);
+				context.Wait(MessageReceivedAsync);
 			}
 		}
 	}

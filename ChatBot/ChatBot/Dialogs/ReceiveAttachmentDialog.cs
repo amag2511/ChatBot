@@ -27,14 +27,9 @@ namespace ChatBot.Dialogs
 			_state = state;
 		}
 
-		//private AddAttachmentForm _state;
-		//public ReceiveAttachmentDialog(AddAttachmentForm state)
-		//{
-		//	_state = state;
-		//}
 		public async Task StartAsync(IDialogContext context)
 		{
-			context.Wait(this.MessageReceivedAsync);
+			context.Wait(MessageReceivedAsync);
 		}
 
 		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
@@ -84,11 +79,11 @@ namespace ChatBot.Dialogs
 					Description = _state.Description
 				};
 
-				using (var rep = new ChatBotRepository<MediaElement>())
+				using (var repository = new ChatBotRepository<MediaElement>())
 				{
 					mediaElement.UserId = _user.Id;
 
-					rep.Create(mediaElement);
+					repository.Create(mediaElement);
 				}
 			}
 		}

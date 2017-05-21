@@ -34,7 +34,7 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { SEARCH_BY_TAG, SEARCH_BY_NAME }, "Выберите тип поиска", "Not a valid option", 3);
+			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { SEARCH_BY_TAG, SEARCH_BY_NAME }, "Выберите тип поиска", "Not a valid option", 3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)

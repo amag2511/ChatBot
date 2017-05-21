@@ -23,7 +23,7 @@ namespace ChatBot.Dialogs
 
 		public AttachmentsDialog(User user)
 		{
-			this._user = user;
+			_user = user;
 		}
 
 		public AttachmentsDialog()
@@ -39,7 +39,7 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { ADD_ATTACHMENT, DELETE_ATTACHMENT }, "Какое действие желаете выполнить?", "Attachments crashed promt", 3);
+			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { ADD_ATTACHMENT, DELETE_ATTACHMENT }, "Какое действие желаете выполнить?", "Attachments crashed promt", 3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -51,14 +51,14 @@ namespace ChatBot.Dialogs
 				switch (optionSelected)
 				{
 					case ADD_ATTACHMENT:
-						var AddAttachmentFormDialog = FormDialog.FromForm(this.BuildAddAttachmentForm, FormOptions.PromptInStart);
-						context.Call(AddAttachmentFormDialog, this.ResumeAfterAddFormDialog);
+						var AddAttachmentFormDialog = FormDialog.FromForm(BuildAddAttachmentForm, FormOptions.PromptInStart);
+						context.Call(AddAttachmentFormDialog, ResumeAfterAddFormDialog);
 						break;
 					case DELETE_ATTACHMENT:
 						var allAttachments = string.Format(ChatBotResources.DELETE_ATTACHMENT, string.Join(", ", _user.MediaElements.Select(x => x.Name)));
 						await context.PostAsync(allAttachments);
-						var DeleteAttachmentFormDialog = FormDialog.FromForm(this.BuildDeleteAttachmentForm, FormOptions.PromptInStart);
-						context.Call(DeleteAttachmentFormDialog, this.ResumeAfterDeleteFormDialog);
+						var DeleteAttachmentFormDialog = FormDialog.FromForm(BuildDeleteAttachmentForm, FormOptions.PromptInStart);
+						context.Call(DeleteAttachmentFormDialog, ResumeAfterDeleteFormDialog);
 						break;
 				}
 			}
@@ -162,7 +162,7 @@ namespace ChatBot.Dialogs
 
 				var mediaItem = repository.FindById((int)IdForDeleting);
 
-				repository.Remove(medEl);
+				repository.Remove(mediaItem);
 
 				return "Удаление прошо успешно, поздравляю(party)";
 			}
