@@ -15,6 +15,7 @@ using ChatBot.Repository;
 using DataAccess.Models;
 using ChatBot.Resources;
 using System.Collections.ObjectModel;
+using ChatBot.Services;
 //using Eliza;
 
 namespace ChatBot
@@ -22,10 +23,6 @@ namespace ChatBot
 	[BotAuthentication]
 	public class MessagesController : ApiController
 	{
-		/// <summary>
-		/// POST: api/Messages
-		/// Receive a message from a user and reply to it
-		/// </summary>
 		public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
 		{
 			if (activity.Type == ActivityTypes.Message)

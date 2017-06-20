@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Models;
 using Microsoft.Bot.Connector;
+using ChatBot.Repository;
 
 namespace ChatBot.Dialogs
 {
@@ -13,8 +14,9 @@ namespace ChatBot.Dialogs
 	{
 		private const string DEFAULT_VIDEO_IMAGE = "http://getinstantvideomachine.com/deluxe-up-demo2/wp-content/uploads/2015/01/video1.png";
 		private const string DEFAULT_DOC_IMAGE = "http://www.zamzar.com/images/filetypes/doc.png";
-		private const string SEARCH_BY_NAME = "По имени";
-		private const string SEARCH_BY_TAG = "по тегам";
+		private const string SearchByNameOption = "По имени";
+		private const string SearchByTagOption = "по тегам";
+		private const string CancelOption = "Отмена";
 
 		private User _user;
 
@@ -34,7 +36,12 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { SEARCH_BY_TAG, SEARCH_BY_NAME }, "Выберите тип поиска", "Not a valid option", 3);
+			PromptDialog.Choice(context,
+								OnOptionSelected,
+								new List<string>() { SearchByTagOption, SearchByNameOption, CancelOption },
+								"Выберите тип поиска",
+								"Недопустимая операция, попробуйте снова.",
+								3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -45,36 +52,24 @@ namespace ChatBot.Dialogs
 
 				switch (optionSelected)
 				{
-					case SEARCH_BY_TAG:
+					case SearchByTagOption:
 						await context.PostAsync("Введите теги, по которым хотите найти медиа элементы");
 						context.Wait(MessageReceivedForTagsAsync);
 						break;
-					case SEARCH_BY_NAME:
+					case SearchByNameOption:
 						await context.PostAsync("Введите имя искомого медиа элемента");
 						context.Wait(MessageReceivedForNameAsync);
+						break;
+					case CancelOption:
+						await context.PostAsync($"Операция была отменена!");
+						context.Done<object>(null);
 						break;
 				}
 			}
 			catch (TooManyAttemptsException ex)
 			{
-				await context.PostAsync($"Ooops! Too many attemps :(. But don't worry, I'm handling that exception and you can try again!");
+				await context.PostAsync($"Упс! слишком много попыток :(");
 
-				context.Wait(MessageReceivedAsync);
-			}
-		}
-
-		public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
-		{
-			try
-			{
-				ShowOptions(context);
-			}
-			catch
-			{
-				context.Fail(new ArgumentException("Что-то пошло не так, убедитесь, что все было сделано по инструкции"));
-			}
-			finally
-			{
 				context.Done<object>(null);
 			}
 		}
@@ -94,6 +89,7 @@ namespace ChatBot.Dialogs
 				{
 					await ShowCarouselWithMediaElements(context, elements);
 				}
+				elements = null;
 			}
 			catch
 			{
@@ -125,6 +121,8 @@ namespace ChatBot.Dialogs
 
 					await context.PostAsync(replyMessage);
 				}
+
+				result = null;
 			}
 			catch
 			{
@@ -245,14 +243,26 @@ namespace ChatBot.Dialogs
 		{
 			var tags = message.Text.Split(new char[] { ',', ' ', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-			var result = _user.MediaElements.Where(x => tags.Any(t => x.Tag.ToLower().Contains(t.ToLower())));
+			IEnumerable<MediaElement> result;
+
+			using (var repository = new ChatBotRepository<User>())
+			{
+				result = repository.GetSender(_user.ConversationId, _user.ToName).MediaElements
+					.Where(x => tags.Any(t => x.Tag.ToLower().Contains(t.ToLower())));
+			}
 
 			return result;
 		}
 
 		private MediaElement SearchAttachmentsByName(IMessageActivity message)
 		{
-			var result = _user.MediaElements.FirstOrDefault(x => message.Text.ToLower() == x.Name.ToLower());
+			MediaElement result;
+
+			using (var repository = new ChatBotRepository<User>())
+			{
+				result = repository.GetSender(_user.ConversationId, _user.ToName).MediaElements
+					.FirstOrDefault(x => message.Text.ToLower() == x.Name.ToLower());
+			}
 
 			return result;
 		}

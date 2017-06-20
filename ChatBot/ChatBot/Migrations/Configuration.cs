@@ -12,12 +12,16 @@ namespace ChatBot.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+			CommandTimeout = 30;
         }
 
         protected override void Seed(Infrastructure.ChatBotContext context)
         {
 			context.Help.AddOrUpdate(x => x.Id,
-					new Help() { Id = 1, Command = "command", Description = "Для вызова меня с доступными коммандами напишите command" }
+					new Help() { Id = 1, Command = "commands", Description = "Открывает диалог с доступными коммандами. Для вызова отправьте сообщение, содержащее ключевое слово commands." }
+					);
+			context.Notification.AddOrUpdate(x => x.Id,
+					new Notification() { Id = 1, Date = DateTime.Now , Description = "Для вызова notification" }
 					);
 		}
     }

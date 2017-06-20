@@ -15,10 +15,12 @@ namespace ChatBot.Dialogs
 	[Serializable]
 	public class RootDialog : IDialog<object>
 	{
+		//private GlobalData data = GlobalData.GetInstance();
 
-		private const string AttachmentsOption = "Прикрепления";
+		private const string AttachmentsOption = "Вложения";
 		private const string NotificationsOption = "Уведомления";
 		private const string SearchOption = "Поиск";
+		private const string CancelOption = "Отмена";
 
 		private User _user;
 		private NotifyService _notifyService;
@@ -36,16 +38,22 @@ namespace ChatBot.Dialogs
 		{
 			var message = await result;
 
-			using (var repository = new ChatBotRepository<User>())
+			_user = new User
 			{
-				_user = repository.GetSender(message);
-			}
+				ToId = message.From.Id,
+				ToName = message.From.Name,
+				FromId = message.Recipient.Id,
+				FromName = message.Recipient.Name,
+				ServiceUrl = message.ServiceUrl,
+				ChannelId = message.ChannelId,
+				ConversationId = message.Conversation.Id,
+			};
 
 			if (message.Text.ToLower().Contains("help"))
 			{
 				await context.Forward(new HelpDialog(), ResumeAfterSupportDialog, message, CancellationToken.None);
 			}
-			else
+			else if(message.Text.ToLower().Contains("commands"))
 			{
 				ShowOptions(context);
 			}
@@ -53,7 +61,12 @@ namespace ChatBot.Dialogs
 
 		private void ShowOptions(IDialogContext context)
 		{
-			PromptDialog.Choice(context, OnOptionSelected, new List<string>() { NotificationsOption, AttachmentsOption, SearchOption }, "Какое действие желаете выполнить?", "Not a valid option", 3);
+			PromptDialog.Choice(context,
+								OnOptionSelected,
+								new List<string>() { NotificationsOption, AttachmentsOption, SearchOption, CancelOption },
+								"С чем хотите поработать?:)",
+								"Недопустимая операция, попробуйте снова.",
+								3);
 		}
 
 		private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -61,6 +74,9 @@ namespace ChatBot.Dialogs
 			try
 			{
 				string optionSelected = await result;
+
+				var user = GetCurrentUser(_user);
+				user = null;
 
 				switch (optionSelected)
 				{
@@ -73,12 +89,15 @@ namespace ChatBot.Dialogs
 					case SearchOption:
 						context.Call(new SearchDialog(_user), ResumeAfterOptionDialog);
 						break;
-
+					case CancelOption:
+						await context.PostAsync($"Операция была отменена!");
+						context.Wait(MessageReceivedAsync);
+						break;
 				}
 			}
 			catch (TooManyAttemptsException ex)
 			{
-				await context.PostAsync($"Ooops! Too many attemps :(. But don't worry, I'm handling that exception and you can try again!");
+				await context.PostAsync($"Упс! слишком много попыток :(. Введите 'help' для помощи!");
 
 				context.Wait(MessageReceivedAsync);
 			}
@@ -97,11 +116,34 @@ namespace ChatBot.Dialogs
 			}
 			catch (Exception ex)
 			{
-				await context.PostAsync($"Failed with message: {ex.Message}");
+				await context.PostAsync($"Непредвиденная ошибка: {ex.Message}");
 			}
 			finally
 			{
 				context.Wait(MessageReceivedAsync);
+			}
+		}
+
+		private User GetCurrentUser(User user)
+		{
+			if (user == null)
+			{
+				return null;
+			}
+
+			User result;
+
+			using (var repository = new ChatBotRepository<User>())
+			{
+				result = repository.GetSender(user.ConversationId, user.ToName);
+
+				if (result == null)
+				{
+					repository.Create(user);
+					result = user;
+				}
+
+				return result;
 			}
 		}
 	}

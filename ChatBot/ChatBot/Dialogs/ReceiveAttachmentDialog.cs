@@ -41,10 +41,12 @@ namespace ChatBot.Dialogs
 				await SaveAttachmentToRepository(message);
 
 				await context.PostAsync("Сохранение прошло успешно");
+
+				context.Done<object>(null);
 			}
 			catch
 			{
-				context.Fail(new ArgumentException("Что-то пошло не так, убедитесь, что вы отправили именно медиа элемент"));
+				await context.PostAsync("Что-то пошло не так, убедитесь, что вы отправили именно медиа элемент и попробуйте снова");
 			}
 			finally
 			{
@@ -79,9 +81,16 @@ namespace ChatBot.Dialogs
 					Description = _state.Description
 				};
 
+				int userId;
+
+				using (var repository = new ChatBotRepository<User>())
+				{
+					userId = repository.GetSender(_user.ConversationId, _user.ToName).Id;
+				}
+
 				using (var repository = new ChatBotRepository<MediaElement>())
 				{
-					mediaElement.UserId = _user.Id;
+					mediaElement.UserId = userId;
 
 					repository.Create(mediaElement);
 				}

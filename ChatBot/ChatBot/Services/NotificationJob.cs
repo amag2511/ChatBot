@@ -26,6 +26,7 @@ namespace ChatBot.Services
 			_user = (User)dataMap["user"];
 			await ResumeConversation();
 		}
+
 		private async Task ResumeConversation()
 		{
 			var userAccount = new ChannelAccount(_user.ToId, _user.ToName);
@@ -37,7 +38,7 @@ namespace ChatBot.Services
 			message.From = botAccount;
 			message.Recipient = userAccount;
 			message.Conversation = new ConversationAccount(id: _user.ConversationId);
-			message.Text = $"Вы просили известить вас в это время. Описание:{_description}";
+			message.Text = $"Вы просили известить вас в это время. Описание: {_description}";
 			message.Locale = "en-Us";
 			await connector.Conversations.SendToConversationAsync((Activity)message);
 		}

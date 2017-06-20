@@ -117,13 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DEFAULT_EXCEPTION" xml:space="preserve">
+    <value>Упс! Что-то пошло не так :(</value>
+  </data>
   <data name="DELETE_ATTACHMENT" xml:space="preserve">
     <value>Существующие файлы в репозитории:
 {0}. </value>
   </data>
   <data name="HELP_DESCRIPTION" xml:space="preserve">
-    <value>Я поддерживаю следующие команды:
-{0}
+    <value>Я поддерживаю следующие команды: {0}.
 Для того, чтобы узнать больше по каждой из них, напиши: help [command].</value>
   </data>
   <data name="HELP_DIDNT_FIND_COMMAND" xml:space="preserve">

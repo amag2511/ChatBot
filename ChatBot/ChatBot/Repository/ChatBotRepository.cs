@@ -76,7 +76,7 @@ namespace ChatBot.Repository
 				.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 		}
 
-		public User GetSender(IMessageActivity activity)
+		public User GetSender(string conversationId, string userName)
 		{
 			var currentObject = (this as ChatBotRepository<User>);
 
@@ -85,8 +85,8 @@ namespace ChatBot.Repository
 				return null;
 			}
 
-			return (this as ChatBotRepository<User>).GetWithInclude(x => x.MediaElements, x => x.Notifications)
-					.FirstOrDefault(x => x.ConversationId == activity.Conversation.Id && x.ToName == activity.From.Name);
+			return currentObject.GetCollection
+					.FirstOrDefault(x => x.ConversationId == conversationId && x.ToName == userName);
 
 		}
 

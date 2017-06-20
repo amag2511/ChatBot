@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ChatBot.Dialogs.AttachmentsDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="5.5" Width="1.75" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.562" Y="6.062" />
+        <Point X="8.562" Y="6.656" />
+        <Point X="8.562" Y="6.656" />
+        <Point X="8.562" Y="7.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.093" Y="0.868" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAEAAAAAAIAABBAQAIAICQCAAJAAAgA=</HashCode>
+      <FileName>Dialogs\AttachmentsDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.HelpDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAACAAgAIAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\HelpDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_helpCommands" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.NotificationDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="6.5" Width="1.75" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="6.812" />
+        <Point X="9.509" Y="6.812" />
+        <Point X="9.509" Y="7.175" />
+        <Point X="9.5" Y="7.175" />
+        <Point X="9.5" Y="7.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.482" Y="0.552" Height="0.182" Width="0.57" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEABAAAAIAEAQAQgAAAAAA=</HashCode>
+      <FileName>Dialogs\NotificationDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.ReceiveAttachmentDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="6.75" Width="2" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.438" Y="7.312" />
+        <Point X="6.438" Y="7.469" />
+        <Point X="8.25" Y="7.469" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAACAAAAAAAAIAAAQAABAAAAAA=</HashCode>
+      <FileName>Dialogs\ReceiveAttachmentDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+      <Field Name="_state" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.075" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.RootDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="5.5" Width="1.5" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="5.938" />
+        <Point X="9.914" Y="5.938" />
+        <Point X="9.914" Y="6.358" />
+        <Point X="9.188" Y="6.358" />
+        <Point X="9.188" Y="7.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.632" Y="0.96" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_notifyService" Type="ChatBot.Services.NotifyService">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.157" Y="0.218" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAgIAAAACACACABAIAAAAAAAIAAAQAEADAAAAA=</HashCode>
+      <FileName>Dialogs\RootDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+      <Field Name="_notifyService" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.SearchDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="8" Width="1.5" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" FixedFromPoint="true">
+      <Path>
+        <Point X="6.75" Y="8.187" />
+        <Point X="8.25" Y="8.187" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAhAAJAAAAECCAsAAAAAAIJAcAQAAABAAQAA=</HashCode>
+      <FileName>Dialogs\SearchDialog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Dialogs.Queries.AddAttachmentForm">
+    <Position X="5.25" Y="5.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\Forms\AddAttachmentForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBot.Infrastructure.ChatBotContext">
+    <Position X="8.25" Y="8.75" Width="1.5" />
+    <AssociationLine Name="Attachment" Type="DataAccess.Models.MediaElement">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.027" Y="0.102" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Infrastructure\ChatBotContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="User" />
+      <Property Name="Attachment" />
+      <Property Name="Help" />
+      <Property Name="Notification" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ChatBot.Repository.ChatBotRepository&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="10.5" Width="2" />
+    <AssociationLine Name="_chatBotContext" Type="ChatBot.Infrastructure.ChatBotContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="10.75" />
+        <Point X="9.312" Y="10.75" />
+        <Point X="9.312" Y="9.983" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.26" Y="0.271" Height="0.182" Width="1.244" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAYAAoAAACAAQAAAAAAALAAAIAABAEAAAAAAAEAAAEA=</HashCode>
+      <FileName>Repository\ChatBotRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_chatBotContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.334" />
+  </Class>
+  <Class Name="ChatBot.Services.NotificationJob" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="7.75" Width="1.5" />
+    <AssociationLine Name="_user" Type="DataAccess.Models.User" FixedFromPoint="true">
+      <Path>
+        <Point X="12.75" Y="7.875" />
+        <Point X="9.75" Y="7.875" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.142" Y="0.092" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAIAAQAAAAAAAAAA=</HashCode>
+      <FileName>Services\NotificationJob.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_user" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ChatBot.Services.NotifyService" Collapsed="true">
+    <Position X="12.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\NotifyService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataAccess.Models.Help" Collapsed="true">
+    <Position X="7.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DataAccess.Models.MediaElement" Collapsed="true">
+    <Position X="10.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DataAccess.Models.Notification" Collapsed="true">
+    <Position X="10.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DataAccess.Models.User">
+    <Position X="8.25" Y="7.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="ChatBot.MessagesController" Collapsed="true">
+    <Position X="9" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAACAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\MessagesController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

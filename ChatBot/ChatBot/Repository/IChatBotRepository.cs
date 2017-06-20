@@ -19,7 +19,7 @@ namespace ChatBot.Repository
 		IEnumerable<T> GetWithInclude(Func<T, bool> predicate,
 			params Expression<Func<T, object>>[] includeProperties);
 
-		User GetSender(IMessageActivity activity);
+		User GetSender(string conversationId, string userName);
 		void Save();
 	}
 }

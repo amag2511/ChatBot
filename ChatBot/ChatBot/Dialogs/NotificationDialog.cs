@@ -25,8 +25,8 @@ namespace ChatBot.Dialogs
 
 		public async Task StartAsync(IDialogContext context)
 		{
-			var AddAttachmentFormDialog = FormDialog.FromForm(BuildAddAttachmentForm, FormOptions.PromptInStart);
-			context.Call(AddAttachmentFormDialog, ResumeAfterAddFormDialog);
+			var AddNotificationForm = FormDialog.FromForm(BuildAddNotificationForm, FormOptions.PromptInStart);
+			context.Call(AddNotificationForm, ResumeAfterAddFormDialog);
 		}
 
 		private async Task ResumeAfterAddFormDialog(IDialogContext context, IAwaitable<NotificationForm> result)
@@ -36,18 +36,9 @@ namespace ChatBot.Dialogs
 				AddNotificationDetailsToDatabase(await result);
 				await context.PostAsync($"Уведомление добавлено успешно!");
 			}
-			catch (FormCanceledException ex)
+			catch
 			{
-				string reply;
-
-				if (ex.InnerException == null)
-				{
-					reply = "Операция по добавлению была отменена";
-				}
-				else
-				{
-					reply = $"Oops! Something went wrong :( Technical Details: {ex.InnerException.Message}";
-				}
+				string reply = $"Ой! Что-то пошло не так :( Возможно вы ввели некорректную дату.";
 
 				await context.PostAsync(reply);
 			}
@@ -57,11 +48,11 @@ namespace ChatBot.Dialogs
 			}
 		}
 
-		private IForm<NotificationForm> BuildAddAttachmentForm()
+		private IForm<NotificationForm> BuildAddNotificationForm()
 		{
 			OnCompletionAsyncDelegate<NotificationForm> processAddNotification = async (context, state) =>
 			{
-				await context.PostAsync($"Хорошо. Уведомление будет добавлено на эту дату!");
+				await context.PostAsync($"Отлично!! Уведомление будет добавлено на эту дату!");
 			};
 
 			return new FormBuilder<NotificationForm>()
@@ -72,8 +63,15 @@ namespace ChatBot.Dialogs
 
 		private void AddNotificationDetailsToDatabase(NotificationForm state)
 		{
-			DateTime date;
-			DateTime.TryParse(state.Date, out date);
+			DateTime date = DateTime.Parse(state.Date);
+			User user;
+
+			using (var repository = new ChatBotRepository<User>())
+			{
+				user = repository.GetSender(_user.ConversationId, _user.ToName);
+				user.MediaElements = null;
+				user.Notifications = null;
+			}
 
 			using (var repository = new ChatBotRepository<Notification>())
 			{
@@ -81,14 +79,19 @@ namespace ChatBot.Dialogs
 				{
 					Date = date,
 					Description = state.Description,
-					UserId = _user.Id
+					UserId = user.Id
 				};
 
 				repository.Create(notification);
 
-				notification.User = _user;
-				data.NotifyService.RunScheduler(notification);
+				notification.User = user;
+				RunScheduller(notification);
 			}
+		}
+
+		private void RunScheduller(Notification notification)
+		{
+			new NotifyService().RunScheduler(notification);
 		}
 	}
 }

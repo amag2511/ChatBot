@@ -61,6 +61,15 @@ namespace ChatBot.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Упс! Что-то пошло не так :(.
+        /// </summary>
+        internal static string DEFAULT_EXCEPTION {
+            get {
+                return ResourceManager.GetString("DEFAULT_EXCEPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Существующие файлы в репозитории:
         ///{0}. .
         /// </summary>
@@ -71,8 +80,7 @@ namespace ChatBot.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Я поддерживаю следующие команды:
-        ///{0}
+        ///   Looks up a localized string similar to Я поддерживаю следующие команды: {0}.
         ///Для того, чтобы узнать больше по каждой из них, напиши: help [command]..
         /// </summary>
         internal static string HELP_DESCRIPTION {
